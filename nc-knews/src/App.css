@@ -1,4 +1,35 @@
 .App {
   text-align: center;
+  display: grid;
+  height: 100vh;
+  grid-template: 1fr 3fr 1fr / 1fr 3fr 1fr;
+  grid-template-areas: 
+  "header header header"
+  "navbar main userinfo"
+  "footer footer footer";
 }
 
+.header {
+  grid-area: header;
+  background-color: aquamarine;
+}
+
+.navbar {
+  grid-area: navbar;
+  background-color: rgb(245, 156, 121);
+}
+
+.main {
+  grid-area: main;
+  background-color: yellowgreen;
+}
+
+.userinfo {
+  grid-area: userinfo;
+  background-color: lightpink;
+}
+
+.footer {
+  grid-area: footer;
+  background-color: lightslategray;
+}
