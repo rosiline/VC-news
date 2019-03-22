@@ -5,30 +5,45 @@ import NavBar from './components/NavBar';
 import Articles from './components/Articles';
 import UserInfo from './components/UserInfo';
 import Footer from './components/Footer';
-import { Router } from '@reach/router';
+import { Router, navigate } from '@reach/router';
 import Article from './components/Article';
 import Topics from './components/Topics';
 import Users from './components/Users';
-import Topic from './components/Topic';
+import ArticleAdder from './components/ArticleAdder';
+import UserPage from './components/UserPage';
+import Login from './components/Login';
 
 class App extends Component {
+  state = {
+    username: 'jessjelly'
+  }
   render() {
     return (
       <div className="App">
         <Header />
         <NavBar />
         <Router className="main">
-          <Articles path="/" />
+          <Articles path='/' sort_by="comment_count" />
           <Topics path="/topics" />
-          <Topic path="/topics/:topic" />
           <Articles path="/articles" />
-          <Article path="/articles/:article_id" />
+          <Articles path="/topics/:topic" />
+          <Article path="/articles/:article_id" username={this.state.username} />
           <Users path="/users" />
+          <ArticleAdder path="/addarticle" username={this.state.username} />
+          <UserPage path="/users/:username" />
+          <Login path="/login" changeUser={this.changeUser} />
         </Router>
-        <UserInfo />
+        <UserInfo username={this.state.username} />
         <Footer />
       </div>
     );
+  }
+  changeUser = (event) => {
+    event.preventDefault();
+    const username = event.target[0].value;
+    console.dir(username)
+    this.setState({ username });
+    navigate('/');
   }
 }
 
