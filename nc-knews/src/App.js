@@ -23,7 +23,7 @@ class App extends Component {
         <Header />
         <NavBar />
         <Router className="main">
-          <Articles path='/' sort_by="comment_count" />
+          <Articles path='/' sort_by='comment_count' />
           <Topics path="/topics" />
           <Articles path="/articles" />
           <Articles path="/topics/:topic" />

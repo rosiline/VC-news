@@ -13,8 +13,8 @@ export const addTopic = async (slug, description) => {
   return data.topic;
 }
 
-export const getArticles = async ({ sort_by, topic }) => {
-  const { data } = await request.get('/articles', { params: { sort_by, topic } });
+export const getArticles = async ({ sort_by, topic, p, limit }) => {
+  const { data } = await request.get('/articles', { params: { sort_by, topic, p, limit } });
   return data;
 }
 
@@ -48,8 +48,8 @@ export const getUser = async (username) => {
   return data.user;
 }
 
-export const getComments = async (article_id) => {
-  const { data } = await request.get(`/articles/${article_id}/comments`);
+export const getComments = async (article_id, p, limit) => {
+  const { data } = await request.get(`/articles/${article_id}/comments`, { params: { p, limit } });
   return data.comments;
 }
 

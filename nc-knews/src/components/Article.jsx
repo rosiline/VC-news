@@ -12,11 +12,13 @@ class Article extends Component {
   state = {
     article: {},
     comments: [],
-    loading: true
+    loading: true,
+    commentPage: 1,
+    commentLimit: 10
   }
   render() {
     const { username, article_id } = this.props;
-    const { article, comments, loading } = this.state;
+    const { article, comments, loading, commentPage, commentLimit } = this.state;
     return <div>
       <h3>{article.title}</h3>
       {loading && 'Loading...'}
@@ -28,6 +30,8 @@ class Article extends Component {
       <IconImage src={dislike_icon} description='dislike' vote={() => this.handleVoteClick(-1)} />
       <h4>{article.comment_count} Comments:</h4>
       <CommentAdder addComment={this.addComment} />
+      {commentPage > 1 && <Button text='Previous comments' handleClick={() => this.fetchComments(commentPage - 1, commentLimit)} />}
+      {commentPage < Math.ceil(article.comment_count / commentLimit) && <Button text='Next comments' handleClick={() => this.fetchComments(commentPage + 1, commentLimit)} />}
       {comments.map(comment => {
         return <Comment key={comment.comment_id} comment={comment} username={username} deleteComment={this.deleteComment} />
       })}
@@ -35,6 +39,7 @@ class Article extends Component {
   }
 
   componentDidMount() {
+    // const {commentPage, commentLimit} = this.state;
     this.fetchArticle();
     this.fetchComments();
   }
@@ -50,10 +55,11 @@ class Article extends Component {
       this.setState({ article, loading: false })
     });
   }
-  fetchComments() {
+  fetchComments(p = 1, limit = 10) {
     const { article_id } = this.props;
-    api.getComments(article_id).then(comments => {
-      this.setState({ comments })
+    api.getComments(article_id, p, limit).then(comments => {
+      console.log(comments)
+      this.setState({ comments, commentPage: p, commentLimit: limit })
     })
   }
   addComment = (event) => {
