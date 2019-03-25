@@ -7,16 +7,19 @@ import * as api from '../api';
 
 class Comment extends Component {
   state = {
-    comment: {}
+    comment: {},
+    voteChange: 0
   }
   render() {
-    const { comment_id, author, body, votes } = this.state.comment;
+    const { comment_id, author, body, votes, created_at } = this.state.comment;
+    const { voteChange } = this.state;
     return <div>
       <p>{author}: {body}</p>
+      <p>Posted: {created_at}</p>
       <p>Votes: {votes}</p>
       {author === this.props.username && <Button text='Delete comment' handleClick={() => this.props.deleteComment(comment_id)} />}
-      <IconImage src={like_icon} description='like' vote={() => this.handleCommentVote(comment_id, 1)} />
-      <IconImage src={dislike_icon} description='dislike' vote={() => this.handleCommentVote(comment_id, -1)} />
+      <IconImage src={like_icon} description='like' vote={() => this.handleCommentVote(1, voteChange, comment_id)} />
+      <IconImage src={dislike_icon} description='dislike' vote={() => this.handleCommentVote(-1, voteChange, comment_id)} />
     </div>
   }
 
@@ -25,13 +28,18 @@ class Comment extends Component {
     this.setState({ comment });
   }
 
-  handleCommentVote = (comment_id, voteChange) => {
-    api.updateCommentVote(comment_id, voteChange)
-      .then((comment) => {
-        this.setState(prevState => {
-          return { comment: { ...prevState.comment, votes: prevState.comment.votes + voteChange } }
+  handleCommentVote = (vote, voteChange, comment_id) => {
+    if (voteChange + vote < 2 && voteChange + vote > -2) {
+      api.updateCommentVote(comment_id, vote)
+        .then((comment) => {
+          this.setState(prevState => {
+            return { comment: { ...prevState.comment, votes: prevState.comment.votes + vote }, voteChange: prevState.voteChange + vote }
+          })
         })
-      })
+        .catch(err => {
+          this.props.navigate('/not-found')
+        })
+    }
   }
 }
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from '@reach/router';
 import Button from './Button';
 import * as api from '../api';
-import Header2 from './Header2';
+import Header from './Header';
 
 class Articles extends Component {
   state = {
@@ -16,9 +16,9 @@ class Articles extends Component {
   render() {
     const { articles, total_count, loading, p, limit } = this.state;
     return <div>
-      {this.props.path === '/' && <Header2 path='/' text='Currently trending' />}
-      {this.props.path === '/articles' && <Header2 text='All articles' />}
-      {this.props.path === '/topics/:topic' && <Header2 text={this.props.topic} />}
+      {this.props.path === '/' && <Header path='/' text='Currently trending' />}
+      {this.props.path === '/articles' && <Header text='All articles' />}
+      {this.props.path === '/topics/:topic' && <Header text={this.props.topic} />}
       <Link to="/addarticle"><Button text="Add new article" /></Link> <br />
       {p > 1 && <Button text="Previous page" handleClick={() => this.fetchArticles(p - 1, limit)} />}
       {p < Math.ceil(total_count / limit) && <Button text="Next page" handleClick={() => this.fetchArticles(p + 1, limit)} />} <br />
@@ -32,16 +32,20 @@ class Articles extends Component {
       </div>}
       {loading && 'Loading...'}
       <ul>
-        {articles.map(({ title, author, article_id, created_at, comment_count, votes }) => {
+        {articles.length === 0 && 'Nothing here yet! Feel free to add an article'}
+        {articles.map(({ title, author, article_id, created_at, comment_count, votes, topic }) => {
           return <li key={article_id}>
-            <Link to={`/articles/${article_id}`}><h4>{title}</h4></Link>
-            <p>Author: {author}</p>
+            <Link to={`/articles/${article_id}`}><h4>{title} - by {author}</h4></Link>
+            <p>Topic: {topic}</p>
             <p>Posted: {created_at}</p>
             <p>Comments: {comment_count}</p>
             <p>Votes: {votes}</p>
           </li>
         })}
       </ul>
+      {p > 1 && <Button text="Previous page" handleClick={() => this.fetchArticles(p - 1, limit)} />}
+      {p < Math.ceil(total_count / limit) && <Button text="Next page" handleClick={() => this.fetchArticles(p + 1, limit)} />} <br />
+      <p>Current page: {p} </p>
     </div>
   }
 
@@ -68,10 +72,12 @@ class Articles extends Component {
   fetchArticles(p = 1, limit = 10) {
     const { topic } = this.props;
     const { sort_by } = this.state;
-    // console.log(sort_by)
     api.getArticles({ sort_by, topic, p, limit })
       .then(({ articles, total_count }) => {
         this.setState({ articles, total_count, loading: false, p, limit })
+      })
+      .catch(err => {
+        this.props.navigate('/not-found')
       })
   }
 

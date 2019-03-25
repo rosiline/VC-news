@@ -1,24 +1,43 @@
 import React, { Component } from 'react';
 import Button from './Button';
-import { Link } from '@reach/router';
+import { Link, navigate } from '@reach/router';
 import * as api from '../api';
 
 class UserInfo extends Component {
   state = {
-    user: {}
+    user: {},
+    loggedIn: false
   }
   render() {
-    const { username, avatar_url, name } = this.state.user;
+    const { user, loggedIn } = this.state;
     return <div className="userinfo">
-      <Link to='/login' ><Button text="Log in/Sign up" /></Link>
-      <p>Logged in as <em>{username}</em></p>
-      <img className='avatar' src={avatar_url} alt="avatar" />
+      {!loggedIn && <Link to='/login' ><Button text="Log in" /></Link>}
+      {loggedIn && <Link to='/' onClick={this.props.signOut}><Button text='Sign out' /></Link>}
+      {loggedIn && <p>Welcome back {user.name}</p>}
+      {loggedIn && <p>Username: <em>{user.username}</em></p>}
+      {loggedIn && <img className='avatar' src={user.avatar_url} alt="avatar" />}
     </div>
   }
   componentDidMount() {
-    api.getUser(this.props.username)
+    const { username } = this.props;
+    if (username) this.fetchUser(username);
+  }
+
+  componentDidUpdate(prevProps, PrevState) {
+    const { username } = this.props;
+    const userChange = prevProps.username !== this.props.username;
+    if (userChange && username) this.fetchUser(username);
+  }
+
+  fetchUser(username) {
+    console.log(username)
+    api.getUser(username)
       .then(user => {
-        this.setState({ user });
+        console.dir(user)
+        this.setState({ user, loggedIn: true });
+      })
+      .catch(err => {
+        navigate('/not-found')
       })
   }
 }

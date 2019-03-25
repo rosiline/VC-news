@@ -22,9 +22,13 @@ class Users extends Component {
   }
 
   componentDidMount() {
-    api.getUsers().then(({ users }) => {
-      this.setState({ users, loading: false });
-    })
+    api.getUsers()
+      .then(({ users }) => {
+        this.setState({ users, loading: false });
+      })
+      .catch(err => {
+        this.props.navigate('/not-found')
+      })
   }
 }
 

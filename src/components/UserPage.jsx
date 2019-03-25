@@ -16,9 +16,13 @@ class UserPage extends Component {
   }
 
   componentDidMount() {
-    api.getUser(this.props.username).then(user => {
-      this.setState({ user, loading: false });
-    })
+    api.getUser(this.props.username)
+      .then(user => {
+        this.setState({ user, loading: false });
+      })
+      .catch(err => {
+        this.props.navigate('/not-found')
+      })
   }
 }
 

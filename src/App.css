@@ -2,11 +2,17 @@
   text-align: center;
   display: grid;
   height: 100vh;
-  grid-template: 1fr 3fr 1fr / 1fr 3fr 1fr;
+  grid-template: 1fr 7fr 1fr / 1fr 3fr 1fr;
   grid-template-areas: 
   "header header header"
   "navbar main userinfo"
   "footer footer footer";
+}
+
+body {
+  font-family: 'Courier New', Courier, monospace;
+  background-image: linear-gradient(to bottom right, rgb(241, 243, 109), rgb(177, 177, 177));
+  background-attachment: fixed;
 }
 
 .header {
@@ -21,6 +27,8 @@
   grid-area: main;
   border: 3px solid black;
   border-radius: 5px;
+  background-image: url('./icons/background5.png');
+  
 }
 
 .userinfo {
@@ -43,4 +51,10 @@
 
 ul {
   list-style-type: none;
+   margin: 0;
+  padding: 0;
+}
+
+form {
+  display: inline-block;
 }

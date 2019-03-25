@@ -14,11 +14,12 @@ class Article extends Component {
     comments: [],
     loading: true,
     commentPage: 1,
-    commentLimit: 10
+    commentLimit: 10,
+    voteChange: 0
   }
   render() {
     const { username, article_id } = this.props;
-    const { article, comments, loading, commentPage, commentLimit } = this.state;
+    const { article, comments, loading, commentPage, commentLimit, voteChange } = this.state;
     return <div>
       <h3>{article.title}</h3>
       {loading && 'Loading...'}
@@ -26,10 +27,10 @@ class Article extends Component {
       <p>{article.body}</p>
       <p>Votes: {article.votes}</p>
       {username === article.author && <Button text='Delete article' handleClick={this.handleClick} />}
-      <IconImage src={like_icon} description='like' vote={() => this.handleVoteClick(1)} />
-      <IconImage src={dislike_icon} description='dislike' vote={() => this.handleVoteClick(-1)} />
-      <h4>{article.comment_count} Comments:</h4>
-      <CommentAdder addComment={this.addComment} />
+      <IconImage src={like_icon} description='like' vote={() => this.handleVoteClick(1, voteChange, article_id)} />
+      <IconImage src={dislike_icon} description='dislike' vote={() => this.handleVoteClick(-1, voteChange, article_id)} />
+      <h4>{comments.length} Comments:</h4>
+      <CommentAdder addComment={this.addComment} username={this.props.username} />
       {commentPage > 1 && <Button text='Previous comments' handleClick={() => this.fetchComments(commentPage - 1, commentLimit)} />}
       {commentPage < Math.ceil(article.comment_count / commentLimit) && <Button text='Next comments' handleClick={() => this.fetchComments(commentPage + 1, commentLimit)} />}
       {comments.map(comment => {
@@ -39,28 +40,33 @@ class Article extends Component {
   }
 
   componentDidMount() {
-    // const {commentPage, commentLimit} = this.state;
     this.fetchArticle();
     this.fetchComments();
   }
   componentDidUpdate(prevProps, prevState) {
     console.log('update!!')
-    // const commentChange = prevState.comments !== this.state.comments
-    // if (commentChange) this.fetchComments();
   }
 
   fetchArticle() {
     const { article_id } = this.props;
-    api.getArticle(article_id).then(article => {
-      this.setState({ article, loading: false })
-    });
+    api.getArticle(article_id)
+      .then(article => {
+        this.setState({ article, loading: false })
+      })
+      .catch(err => {
+        this.props.navigate('/not-found')
+      });
   }
   fetchComments(p = 1, limit = 10) {
     const { article_id } = this.props;
-    api.getComments(article_id, p, limit).then(comments => {
-      console.log(comments)
-      this.setState({ comments, commentPage: p, commentLimit: limit })
-    })
+    api.getComments(article_id, p, limit)
+      .then(comments => {
+        console.log(comments)
+        this.setState({ comments, commentPage: p, commentLimit: limit })
+      })
+      .catch(err => {
+        this.props.navigate('/not-found')
+      })
   }
   addComment = (event) => {
     event.preventDefault();
@@ -69,15 +75,21 @@ class Article extends Component {
     api.addComment(article_id, username, body)
       .then(comment => {
         this.setState(prevState => {
-          return { comments: [...prevState.comments, comment] }
+          return { comments: [comment, ...prevState.comments] }
         })
+      })
+      .catch(err => {
+        this.props.navigate('/not-found')
       })
     event.target[0].value = '';
   }
 
   deleteComment = (comment_id) => {
     api.deleteComment(comment_id)
-      .then(() => this.fetchComments());
+      .then(() => this.fetchComments())
+      .catch(err => {
+        this.props.navigate('/not-found')
+      });
   }
 
   handleClick = () => {
@@ -86,16 +98,23 @@ class Article extends Component {
       .then(() => {
         navigate('/articles');
       })
+      .catch(err => {
+        this.props.navigate('/not-found')
+      })
   }
 
-  handleVoteClick = (voteChange) => {
-    const { article_id } = this.props;
-    api.updateArticleVote(article_id, voteChange)
-      .then(() => {
-        this.setState(prevState => {
-          return { article: { ...prevState.article, votes: prevState.article.votes + voteChange } }
+  handleVoteClick = (vote, voteChange, article_id) => {
+    if (voteChange + vote < 2 && voteChange + vote > -2) {
+      api.updateArticleVote(article_id, vote)
+        .then(() => {
+          this.setState(prevState => {
+            return { article: { ...prevState.article, votes: prevState.article.votes + vote }, voteChange: prevState.voteChange + vote }
+          })
         })
-      })
+        .catch(err => {
+          this.props.navigate('/not-found')
+        })
+    }
   }
 }
 

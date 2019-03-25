@@ -12,19 +12,23 @@ import Users from './components/Users';
 import ArticleAdder from './components/ArticleAdder';
 import UserPage from './components/UserPage';
 import Login from './components/Login';
+import NotFound from './components/NotFound';
+import ls from 'local-storage';
 
 class App extends Component {
   state = {
-    username: 'jessjelly'
+    username: ''
   }
   render() {
     return (
       <div className="App">
-        <Header />
+        <div className="header">
+          <Header text="VC News" />
+        </div>
         <NavBar />
-        <Router className="main">
+        <Router className="main" tabIndex="" >
           <Articles path='/' sort_by='comment_count' />
-          <Topics path="/topics" />
+          <Topics path="/topics" username={this.state.username} />
           <Articles path="/articles" sort_by='created_at' />
           <Articles path="/topics/:topic" sort_by='created_at' />
           <Article path="/articles/:article_id" username={this.state.username} />
@@ -32,18 +36,30 @@ class App extends Component {
           <ArticleAdder path="/addarticle" username={this.state.username} />
           <UserPage path="/users/:username" />
           <Login path="/login" changeUser={this.changeUser} />
+          <NotFound default path="/not-found" />
         </Router>
-        <UserInfo username={this.state.username} />
+        <UserInfo username={this.state.username} signOut={this.signOut} />
         <Footer />
       </div>
     );
   }
+
+  componentDidMount() {
+    const username = ls.get('username');
+    if (username) this.setState({ username });
+  }
+
   changeUser = (event) => {
     event.preventDefault();
     const username = event.target[0].value;
     console.dir(username)
     this.setState({ username });
+    ls.set('username', username);
     navigate('/');
+  }
+  signOut() {
+    ls.remove('username');
+    this.setState({ username: '' })
   }
 }
 
