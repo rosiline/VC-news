@@ -17,7 +17,8 @@ import ls from 'local-storage';
 
 class App extends Component {
   state = {
-    username: ''
+    username: '',
+    loggedIn: false
   }
   render() {
     return (
@@ -38,7 +39,7 @@ class App extends Component {
           <Login path="/login" changeUser={this.changeUser} />
           <NotFound default path="/not-found" />
         </Router>
-        <UserInfo username={this.state.username} signOut={this.signOut} />
+        <UserInfo username={this.state.username} signOut={this.signOut} loggedIn={this.state.loggedIn} />
         <Footer />
       </div>
     );
@@ -52,14 +53,14 @@ class App extends Component {
   changeUser = (event) => {
     event.preventDefault();
     const username = event.target[0].value;
-    console.dir(username)
-    this.setState({ username });
+    this.setState({ username, loggedIn: true });
     ls.set('username', username);
     navigate('/');
   }
-  signOut() {
+
+  signOut = () => {
     ls.remove('username');
-    this.setState({ username: '' })
+    this.setState({ username: '', loggedIn: false });
   }
 }
 

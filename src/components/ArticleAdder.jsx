@@ -39,7 +39,7 @@ class ArticleAdder extends Component {
         <input type="text" id='topic' hidden={this.state.newTopicHidden} onChange={this.handleChange} required={!this.state.newTopicHidden} />
         <label htmlFor="description" hidden={this.state.newTopicHidden}>Topic Description:</label>
         <input type="text" id='description' hidden={this.state.newTopicHidden} onChange={this.handleChange} required={!this.state.newTopicHidden} />
-        <input type="submit" value="Submit" />
+        <input className="btn btn-warning" type="submit" value="Submit" />
       </form >}
     </div>
   }

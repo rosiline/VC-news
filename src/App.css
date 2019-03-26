@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  font-family: 'Courier New', Courier, monospace;
+  color: rgb(7, 51, 108);
   display: grid;
   height: 100vh;
   grid-template: 1fr 7fr 1fr / 1fr 3fr 1fr;
@@ -10,13 +12,21 @@
 }
 
 body {
-  font-family: 'Courier New', Courier, monospace;
-  background-image: linear-gradient(to bottom right, rgb(241, 243, 109), rgb(177, 177, 177));
+  background-image: url('./icons/background.png');
+  /* background-image: linear-gradient(to bottom right, rgb(241, 243, 109), rgb(177, 177, 177)); */
   background-attachment: fixed;
 }
 
 .header {
   grid-area: header;
+  -webkit-text-stroke: 1px black;
+   color: yellow;
+   text-shadow:
+       3px 3px 0 #000,
+     -1px -1px 0 #000,  
+      1px -1px 0 #000,
+      -1px 1px 0 #000,
+       1px 1px 0 #000;
 }
 
 .navbar {
@@ -27,8 +37,7 @@ body {
   grid-area: main;
   border: 3px solid black;
   border-radius: 5px;
-  background-image: url('./icons/background5.png');
-  
+  background-image: url('./icons/background2.jpg');
 }
 
 .userinfo {
@@ -57,4 +66,22 @@ ul {
 
 form {
   display: inline-block;
+}
+
+a:visited {
+  color: rgb(7, 51, 108);
+}
+
+a:link {
+  color: rgb(7, 51, 108);
+}
+
+.btn {
+  color: yellow;
+  background-color: rgb(32, 44, 66); 
+}
+
+.outerText {
+  color:yellow;
+  font-weight: bold;
 }

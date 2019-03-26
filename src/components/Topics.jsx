@@ -29,7 +29,7 @@ class Topics extends Component {
       {loading && 'Loading...'}
       <ul>
         {topics.map(({ slug, description }) => {
-          return <Link key={slug} to={`/topics/${slug}`}><li>{slug} - {description}</li></Link>
+          return <Link key={slug} to={`/topics/${slug}`}><li><h4>{slug} - {description}</h4></li></Link>
         })}
       </ul>
     </div>

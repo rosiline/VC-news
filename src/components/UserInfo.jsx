@@ -5,12 +5,12 @@ import * as api from '../api';
 
 class UserInfo extends Component {
   state = {
-    user: {},
-    loggedIn: false
+    user: {}
   }
   render() {
-    const { user, loggedIn } = this.state;
-    return <div className="userinfo">
+    const { user } = this.state;
+    const { loggedIn } = this.props;
+    return <div className="userinfo outerText">
       {!loggedIn && <Link to='/login' ><Button text="Log in" /></Link>}
       {loggedIn && <Link to='/' onClick={this.props.signOut}><Button text='Sign out' /></Link>}
       {loggedIn && <p>Welcome back {user.name}</p>}
@@ -26,15 +26,14 @@ class UserInfo extends Component {
   componentDidUpdate(prevProps, PrevState) {
     const { username } = this.props;
     const userChange = prevProps.username !== this.props.username;
+    console.log(userChange, username);
     if (userChange && username) this.fetchUser(username);
   }
 
   fetchUser(username) {
-    console.log(username)
     api.getUser(username)
       .then(user => {
-        console.dir(user)
-        this.setState({ user, loggedIn: true });
+        this.setState({ user });
       })
       .catch(err => {
         navigate('/not-found')
