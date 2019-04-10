@@ -1,3 +1,4 @@
+@media screen and (min-width: 500px) { 
 .App {
   text-align: center;
   font-family: 'Courier New', Courier, monospace;
@@ -9,11 +10,27 @@
   "header header header"
   "navbar main userinfo"
   "footer footer footer";
+  }
 }
+
+@media screen and (max-width: 500px) {
+  .App {
+    text-align: center;
+  font-family: 'Courier New', Courier, monospace;
+  color: rgb(7, 51, 108);
+  }
+  #navBarSmall{
+    display:inline;
+    font-size: 20px;
+    margin: 3px;
+  }
+
+}
+
+
 
 body {
   background-image: url('./icons/background.png');
-  /* background-image: linear-gradient(to bottom right, rgb(241, 243, 109), rgb(177, 177, 177)); */
   background-attachment: fixed;
 }
 
@@ -37,8 +54,10 @@ body {
   grid-area: main;
   border: 3px solid black;
   border-radius: 5px;
-  background-image: url('./icons/background2.jpg');
+  background-color: rgba(255, 255, 255, 0.5);
+  background-image: linear-gradient(to bottom right, rgba(250, 235, 33, 0.5), rgba(255, 184, 53, 0.5));
 }
+
 
 .userinfo {
   grid-area: userinfo;
@@ -84,4 +103,9 @@ a:link {
 .outerText {
   color:yellow;
   font-weight: bold;
+  text-shadow:
+   -1px -1px 0 #000,  
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+     1px 1px 0 #000;
 }

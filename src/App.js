@@ -26,8 +26,9 @@ class App extends Component {
         <div className="header">
           <Header text="VC News" />
         </div>
+        <UserInfo username={this.state.username} signOut={this.signOut} loggedIn={this.state.loggedIn} />
         <NavBar />
-        <Router className="main" tabIndex="" >
+        <Router className="main overlay" tabIndex="" >
           <Articles path='/' sort_by='comment_count' />
           <Topics path="/topics" username={this.state.username} />
           <Articles path="/articles" sort_by='created_at' />
@@ -39,7 +40,6 @@ class App extends Component {
           <Login path="/login" changeUser={this.changeUser} />
           <NotFound default path="/not-found" />
         </Router>
-        <UserInfo username={this.state.username} signOut={this.signOut} loggedIn={this.state.loggedIn} />
         <Footer />
       </div>
     );
@@ -47,7 +47,7 @@ class App extends Component {
 
   componentDidMount() {
     const username = ls.get('username');
-    if (username) this.setState({ username });
+    if (username) this.setState({ username, loggedIn: true });
   }
 
   changeUser = (event) => {
