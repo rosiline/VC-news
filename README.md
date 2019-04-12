@@ -1,3 +1,36 @@
+#VC News
+
+This project is a social news/discussion website inspired by Reddit. It serves as a front end and interacts with the VC-Knews API which can be found [here](https://github.com/rosiline/VC-news-BE).
+
+Hosted on Netlify: https://vc-news.netlify.com/
+
+## Prerequisites
+
+You will need React, Node.js and npm installed to run this project.
+
+##Installing
+1. Fork your own copy of this repository
+2. Navigate to the folder where you want to store it though the terminal and paste the following command in the terminal:
+```
+git clone <GitHub repo link>
+```
+3. cd into the repository
+4. Run the following command in your terminal to install all the node modules required
+```
+npm install
+```
+This will install the following dependencies:
+```
+@reach/router: ^1.2.1,
+axios: ^0.18.0,
+local-storage: ^1.4.2,
+react: ^16.8.4,
+react-dom: ^16.8.4,
+react-scripts: 2.1.8
+```
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

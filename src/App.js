@@ -14,6 +14,7 @@ import UserPage from './components/UserPage';
 import Login from './components/Login';
 import NotFound from './components/NotFound';
 import ls from 'local-storage';
+import * as api from './api';
 
 class App extends Component {
   state = {
@@ -53,9 +54,24 @@ class App extends Component {
   changeUser = (event) => {
     event.preventDefault();
     const username = event.target[0].value;
-    this.setState({ username, loggedIn: true });
-    ls.set('username', username);
-    navigate('/');
+    api.getUsers()
+      .then(({ users }) => {
+        const userList = users.map(user => user.username);
+        return userList;
+      })
+      .then(userList => {
+        if (userList.includes(username)) {
+          this.setState({ username, loggedIn: true });
+          ls.set('username', username);
+          navigate('/');
+        } else {
+          alert('There was a problem logging in. Please check the username is valid');
+        }
+      })
+    // if (username )
+    // this.setState({ username, loggedIn: true });
+    // ls.set('username', username);
+    // navigate('/');
   }
 
   signOut = () => {
